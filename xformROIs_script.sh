@@ -69,6 +69,14 @@ do
 	
 	echo WORKING ON SUBJECT $subject
 
+
+	# make subject's outDir if it doesn't exist
+	subjOutDir=$(echo "${outDir/subjid/$subject}")
+	if [ ! -d "$subjOutDir" ]; then
+		mkdir $subjOutDir
+	fi 	
+	
+	
 	for atlasROI in $atlasROIMasks
 	do
 
