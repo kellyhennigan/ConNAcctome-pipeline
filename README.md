@@ -146,6 +146,107 @@ Saves out files to directory, **projdir/data/subjid/dti96trilin**
 
 
 
+### mrtrix pre-processing steps 
+From terminal command line, run:
+```
+python mrtrix_proc.py
+```
+This script: 
+* copies b_file and brainmask to mrtrix output dir
+* make mrtrix tensor file and fa map (for comparison with mrvista maps and for QA)
+* estimate response function using lmax of 8
+* estimate fiber orientation distribution (FOD) (for tractography)
+
+#### output
+Saves out files to directory, **projectdir/subjid/dti96trilin/mrtrix**. 
+
+
+
+### Track fibers
+From terminal command line, run:
+```
+python mrtrix_fibertrack.py
+```
+tracks fiber pathways between 2 ROIs with desired parameters 
+
+#### output
+Saves out files to directory, **projectdir/data/subjid/fibers/dti96trilin/mrtrix**
+
+
+### Clean fiber bundles
+In matlab:
+```
+cleanFibers_script
+```
+uses AFQ software to iteratively remove errant fibers 
+
+#### output
+Saves out fiber group files to directory, **projectdir/data/subjid/fibers**
+
+Also saves out images of pruned fiber bundles for QA purposes, for example: 
+![Alt text](jj190821.png?raw=true "example subject's MFB after pruning")
+
+Note that the figure windows in matlab can be rotated with user's cursor to visualize fiber bundle from all angles. 
+
+
+### Visualization
+Finally, visualize the fiber bundles you worked so hard to find! In matlab:
+```
+plot_singlesub_fgs_script
+```
+uses AFQ software to plot fiber bundles with a subject's anatomy as an underlay. This script contains a lot of hard-coded plotting parameters that are good for visualizing the medial forebrain bundle. I suggest using it as a example of how to use the AFQ plotting functions and you can take it from there. 
+
+#### output
+This script creates figures like this: 
+![Alt text](subj001_DA_NAcc_2fgs_wholebrain_leftsagittal.png?raw=true "example subject's left DA to Nacc fiber bundles, wholebrain view")
+![Alt text](subj001_DA_NAcc_2fgs_leftsagittal.png?raw=true "example subject's left DA to Nacc fiber bundles, close-up")
+
+Note that the figure windows in matlab can be rotated with user's cursor to visualize fiber bundle from all angles. 
+
+
+### Save out measurements from fiber bundles cores
+In matlab:
+```
+dtiSaveFGMeasures_script  
+dtiSaveFGMeasures_csv_script
+```
+
+#### output
+script, dtiSaveFGMeasures_csv_script saves out a csv file with desired diffusion measurements (fa, md, ad, rd) for each subject. 
+
+
+### Correlate diffusivity measurements with personality and/or fMRI measures, e.g., impulsivity scores:
+In matlab:
+```
+add scripts here...
+```
+
+### Quality Assurance (QA)
+Quality assurance checks should always be performed on data. Some common issues that can go wrong: 
+
+#### bad co-registration
+In a viewer, load subject's co-registered anatomy and B0 volumes (files "t1.nii.gz" and "B0.nii.gz"). These should be reasonably aligned. If they aren't, it means that ROI masks (defined based on anatomy) won't be well-aligned to the diffusion data, which could cause problems, especially for small ROIs. 
+
+#### bad head motion
+In matlab, run: 
+```
+doQA_subj_script.m
+```
+and then: 
+```
+doQA_group_script.m
+```
+to save out figures showing head motion. Figures saved out to **projdir/figures/QA/dwi**. These can be used to determine whether a subject should be excluded due to bad motion. 
+
+#### tractography issues
+Tractography can fail for a number of reasons: bad ROI mask alignment, bad alignment of the brain mask used to constrain tractography, or noisy data, to name a few. Check the number of fibers output from the mrtrix tractography step with the following terminal command: 
+```
+tckinfo [name of .tck file]
+```
+which will print out some info into the terminal window; the # of tracks is the "count" variable. 
+
+
+
 
 
 

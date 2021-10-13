@@ -32,7 +32,7 @@ dataDir = [mainDir '/data'];
 
 
 % add scripts to matlab's search path
-path(path,genpath(scriptsDir)); % add scripts dir to matlab search path
+addpath(genpath(scriptsDir)); % add scripts dir to matlab search path
 
 
 subjects = {'subj001','subj002','subj003','subj004','subj005'};
